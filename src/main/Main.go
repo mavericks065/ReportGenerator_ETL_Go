@@ -2,11 +2,19 @@ package main
 
 import (
 	. "extractor"
+	"fmt"
 	. "loader"
+	"runtime"
+	"time"
 	. "transformer"
 )
 
 func main() {
+
+	start := time.Now()
+
+	runtime.GOMAXPROCS(4)
+
 	healthCenterChannel := make(chan *HealthCenter)
 	areaStatisticsChannel := make(chan *AreaStatistics)
 	doneChannel := make(chan bool)
@@ -15,4 +23,6 @@ func main() {
 	go TransformToAreaStatistics(healthCenterChannel, areaStatisticsChannel)
 	go LoadAreaStatistics(areaStatisticsChannel, doneChannel)
 	<-doneChannel
+
+	fmt.Println(time.Since(start))
 }

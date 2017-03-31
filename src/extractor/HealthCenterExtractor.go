@@ -2,7 +2,6 @@ package extractor
 
 import (
 	"encoding/csv"
-	"fmt"
 	"os"
 	"strconv"
 )
@@ -42,9 +41,13 @@ type HealthCenter struct {
 	AbortionAverageDelay    float64
 }
 
-// Extract HealthCenter
+const (
+	yes         = "oui"
+	emptyRecord = "sans objet"
+)
+
+// ExtractHealthCenters extract data from CSV file
 func ExtractHealthCenters(ch chan *HealthCenter) {
-	fmt.Println("extract")
 
 	f, _ := os.Open("./health_centers_and_hospitals_statistics_2010.csv")
 	defer f.Close()
@@ -80,7 +83,7 @@ func parseRecord(record []string, i int) *HealthCenter {
 	healthCenter.CesareanLevel2Rate, _ = strconv.ParseFloat(record[i+29], 64)
 	healthCenter.CesareanLevel3Rate, _ = strconv.ParseFloat(record[i+31], 64)
 	healthCenter.Deliveries, _ = strconv.Atoi(record[i+32])
-	if record[i+33] == "sans objet" {
+	if record[i+33] == emptyRecord {
 		healthCenter.AverageMaternityStay = 0
 	} else {
 		healthCenter.AverageMaternityStay, _ = strconv.ParseFloat(record[i+33], 64)
@@ -98,7 +101,7 @@ func parseRecord(record []string, i int) *HealthCenter {
 	healthCenter.DialysisSessionsCount, _ = strconv.Atoi(record[i+52])
 	healthCenter.Abortion, _ = strconv.Atoi(record[i+55])
 	healthCenter.AbortionMedicalReasons, _ = strconv.Atoi(record[i+56])
-	if record[i+57] == "sans objet" {
+	if record[i+57] == emptyRecord {
 		healthCenter.AbortionAverageDelay = 0
 	} else {
 		healthCenter.AbortionAverageDelay, _ = strconv.ParseFloat(record[i+57], 64)
@@ -107,7 +110,7 @@ func parseRecord(record []string, i int) *HealthCenter {
 }
 
 func isTrue(condition string) bool {
-	if condition == "oui" {
+	if condition == yes {
 		return true
 	}
 	return false

@@ -26,7 +26,10 @@ type AreaStatistics struct {
 	MedicalAbortionTotalCount int
 }
 
-func TransformToAreaStatistics(extractChannel chan *HealthCenter, areaStatisticsChannel chan *AreaStatistics) {
+// TransformToAreaStatistics transform HealthCenter extracted previously into
+// AreaStatistics and puts them in the channel
+func TransformToAreaStatistics(extractChannel chan *HealthCenter,
+	areaStatisticsChannel chan *AreaStatistics) {
 
 	numMessages := 0
 	areaStatisticsMap := make(map[int]list.List)
@@ -45,7 +48,6 @@ func TransformToAreaStatistics(extractChannel chan *HealthCenter, areaStatistics
 				healthCenterList.PushBack(h)
 				areaStatisticsMap[h.Area] = healthCenterList
 			}
-			// transformChannel <- h
 			numMessages--
 		}(ch)
 	}

@@ -34,7 +34,7 @@ func TransformToAreaStatistics(extractChannel chan *HealthCenter,
 	numMessages := 0
 	areaStatisticsMap := make(map[int]list.List)
 
-	// fill map od area statistics
+	// fill map and area statistics
 	for ch := range extractChannel {
 		numMessages++
 		go func(h *HealthCenter) {
@@ -62,13 +62,13 @@ func TransformToAreaStatistics(extractChannel chan *HealthCenter,
 	for areaNumber := range areaStatisticsMap {
 		listOfHcs := areaStatisticsMap[areaNumber]
 		areaStatistics := buildAreaStatistics(areaNumber, &listOfHcs)
-
 		areaStatisticsChannel <- areaStatistics
 	}
+
 	close(areaStatisticsChannel)
 }
 
-// NewAreaStatistics instantiate AreaStatistics with its map of HealthCenter
+// newAreaStatistics instantiate AreaStatistics with its map of HealthCenter
 func newAreaStatistics() *AreaStatistics {
 	var areaStatistics AreaStatistics
 	areaStatistics.HealthCenters = make(map[string]*HealthCenter)

@@ -17,10 +17,14 @@ func main() {
 
 	healthCenterChannel := make(chan *HealthCenter)
 	areaStatisticsChannel := make(chan *AreaStatistics)
+	maternityStatisticsChannel := make(chan *MaternityStatistics)
 	doneChannel := make(chan bool)
 
 	go ExtractHealthCenters(healthCenterChannel)
+
 	go TransformToAreaStatistics(healthCenterChannel, areaStatisticsChannel)
+	go TransformToMaternityStatistics(healthCenterChannel, maternityStatisticsChannel)
+	<-maternityStatisticsChannel
 	go LoadAreaStatistics(areaStatisticsChannel, doneChannel)
 	<-doneChannel
 

@@ -9,7 +9,7 @@ import (
 
 // LoadAreaStatistics write area numbers i a txt file for now
 func LoadAreaStatistics(areaStatisticsChannel chan *AreaStatistics, doneChannel chan bool) {
-	destinationFile, _ := os.Create("./areaStatisticsDest.txt")
+	destinationFile, _ := os.Create("./area-statistics.txt")
 	defer destinationFile.Close()
 
 	for a := range areaStatisticsChannel {

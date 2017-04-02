@@ -16,17 +16,22 @@ func main() {
 	runtime.GOMAXPROCS(4)
 
 	healthCenterChannel := make(chan *HealthCenter)
+
 	areaStatisticsChannel := make(chan *AreaStatistics)
 	maternityStatisticsChannel := make(chan *MaternityStatistics)
-	doneChannel := make(chan bool)
+
+	doneAreaStatisticsChannel := make(chan bool)
+	doneMaternityStatisticsChannel := make(chan bool)
 
 	go ExtractHealthCenters(healthCenterChannel)
 
 	go TransformToAreaStatistics(healthCenterChannel, areaStatisticsChannel)
 	go TransformToMaternityStatistics(healthCenterChannel, maternityStatisticsChannel)
-	<-maternityStatisticsChannel
-	go LoadAreaStatistics(areaStatisticsChannel, doneChannel)
-	<-doneChannel
+
+	go LoadAreaStatistics(areaStatisticsChannel, doneAreaStatisticsChannel)
+	<-doneAreaStatisticsChannel
+	go LoadMaternityStatistics(maternityStatisticsChannel, doneMaternityStatisticsChannel)
+	<-doneMaternityStatisticsChannel
 
 	fmt.Println(time.Since(start))
 }

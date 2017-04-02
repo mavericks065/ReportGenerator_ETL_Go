@@ -47,9 +47,9 @@ const (
 )
 
 // ExtractHealthCenters extract data from CSV file
-func ExtractHealthCenters(ch chan *HealthCenter) {
+func ExtractHealthCenters(ch chan *HealthCenter, year string) {
 
-	f, _ := os.Open("./health_centers_and_hospitals_statistics_2010.csv")
+	f, _ := os.Open("./health_centers_and_hospitals_statistics_" + year + ".csv")
 	defer f.Close()
 	r := csv.NewReader(f)
 

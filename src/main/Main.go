@@ -2,7 +2,6 @@ package main
 
 import (
 	. "extractor"
-	"fmt"
 	. "loader"
 	"log"
 	"runtime"
@@ -37,7 +36,7 @@ func main() {
 
 	run(&options)
 
-	fmt.Println(time.Since(start))
+	log.Print(time.Since(start))
 }
 
 func init() {
@@ -58,7 +57,7 @@ func initParser(options *CommandOptions) (parser *flags.Parser) {
 }
 
 func run(options *CommandOptions) {
-	fmt.Println(options.Year)
+	log.Print(options.Year)
 
 	healthCenterChannel := make(chan *HealthCenter)
 
@@ -73,8 +72,8 @@ func run(options *CommandOptions) {
 	go TransformToAreaStatistics(healthCenterChannel, areaStatisticsChannel)
 	go TransformToMaternityStatistics(healthCenterChannel, maternityStatisticsChannel)
 
-	go LoadAreaStatistics(areaStatisticsChannel, doneAreaStatisticsChannel)
-	<-doneAreaStatisticsChannel
-	go LoadMaternityStatistics(maternityStatisticsChannel, doneMaternityStatisticsChannel)
-	<-doneMaternityStatisticsChannel
+	go LoadAreaStatistics(areaStatisticsChannel, doneAreaStatisticsChannel, options.Year)
+	go LoadMaternityStatistics(maternityStatisticsChannel, doneMaternityStatisticsChannel, options.Year)
+	_ = <-doneAreaStatisticsChannel
+	_ = <-doneMaternityStatisticsChannel
 }

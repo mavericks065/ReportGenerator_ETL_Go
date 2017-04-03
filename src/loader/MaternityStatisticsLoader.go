@@ -8,8 +8,10 @@ import (
 )
 
 // LoadMaternityStatistics write area numbers i a txt file for now
-func LoadMaternityStatistics(maternityStatisticsChannel chan *MaternityStatistics, doneChannel chan bool) {
-	destinationFile, _ := os.Create("./maternity-statistics.txt")
+func LoadMaternityStatistics(maternityStatisticsChannel chan *MaternityStatistics, doneChannel chan bool,
+	year string) {
+
+	destinationFile, _ := os.Create("./maternity-statistics-" + year + ".txt")
 	defer destinationFile.Close()
 
 	for a := range maternityStatisticsChannel {
@@ -25,4 +27,5 @@ func LoadMaternityStatistics(maternityStatisticsChannel chan *MaternityStatistic
 
 	}
 	doneChannel <- true
+	close(doneChannel)
 }

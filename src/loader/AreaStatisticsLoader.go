@@ -8,8 +8,9 @@ import (
 )
 
 // LoadAreaStatistics write area numbers i a txt file for now
-func LoadAreaStatistics(areaStatisticsChannel chan *AreaStatistics, doneChannel chan bool) {
-	destinationFile, _ := os.Create("./area-statistics.txt")
+func LoadAreaStatistics(areaStatisticsChannel chan *AreaStatistics, doneChannel chan<- bool,
+	year string) {
+	destinationFile, _ := os.Create("./area-statistics-" + year + ".txt")
 	defer destinationFile.Close()
 
 	for a := range areaStatisticsChannel {
@@ -29,4 +30,5 @@ func LoadAreaStatistics(areaStatisticsChannel chan *AreaStatistics, doneChannel 
 
 	}
 	doneChannel <- true
+	close(doneChannel)
 }
